@@ -168,14 +168,16 @@ export default class Checklist {
     this._elements.wrapper.addEventListener(
       "keydown",
       (event) => {
-        const [ENTER, BACKSPACE] = [13, 8]; // key codes
-
-        switch (event.keyCode) {
-          case ENTER:
+        switch (event.key) {
+          case "Enter":
             this.enterPressed(event);
             break;
-          case BACKSPACE:
+          case "Backspace":
             this.backspace(event);
+            break;
+          case "ArrowUp":
+            this.arrowUp(event);
+
             break;
         }
       },
@@ -326,6 +328,51 @@ export default class Checklist {
   }
 
   /**
+   * Ensures that the caret is moved to previous item if empty
+   *
+   * @param {MouseEvent} event - keypress
+   * @returns
+   */
+  arrowUp(event) {
+    event.preventDefault();
+
+    const items = this.items;
+    const currentItem = document.activeElement.closest(`.${this.CSS.item}`);
+    const currentIndex = items.indexOf(currentItem);
+
+    const prevItem = this.items[currentIndex - 1];
+    console.log("currentItem.textContent", currentItem.textContent);
+    /**
+     * If there is a previous item, do not bubble event up to main editor
+     * Bubbling this event will cause the caret to move to previous block, not previous item
+     */
+    if (prevItem && !prevItem.textContent) {
+      event.stopPropagation();
+    }
+
+    const prevItemInput = this.getItemInput(prevItem);
+    const currentItemInput = this.getItemInput(currentItem);
+
+    const selection = window.getSelection();
+    const caretAtTheBeginning = selection.focusOffset === 0;
+
+    /**
+     * If the current element has text and the caret is not at the start, move the caret to the start
+     */
+    if (currentItem.textContent && !caretAtTheBeginning) {
+      event.stopPropagation();
+      moveCaret(currentItemInput, undefined, 0);
+    } else if (prevItemInput) {
+    /**
+     * Else, if there is a previous item, move the caret to the end of the previous item
+     */
+      moveCaret(prevItemInput, undefined, prevItemInput.childNodes.length);
+    }
+
+    return;
+  }
+
+  /**
    * Handle backspace
    *
    * @param {KeyboardEvent} event - keyboard event
@@ -400,6 +447,6 @@ export default class Checklist {
    * @returns {Element}
    */
   getItemInput(el) {
-    return el.querySelector(`.${this.CSS.textField}`);
+    return el?.querySelector(`.${this.CSS.textField}`);
   }
 }
