@@ -341,7 +341,7 @@ export default class Checklist {
     const currentIndex = items.indexOf(currentItem);
 
     const prevItem = this.items[currentIndex - 1];
-    console.log("currentItem.textContent", currentItem.textContent);
+
     /**
      * If there is a previous item, do not bubble event up to main editor
      * Bubbling this event will cause the caret to move to previous block, not previous item
@@ -363,9 +363,9 @@ export default class Checklist {
       event.stopPropagation();
       moveCaret(currentItemInput, undefined, 0);
     } else if (prevItemInput) {
-    /**
-     * Else, if there is a previous item, move the caret to the end of the previous item
-     */
+      /**
+       * Else, if there is a previous item, move the caret to the end of the previous item
+       */
       moveCaret(prevItemInput, undefined, prevItemInput.childNodes.length);
     }
 
