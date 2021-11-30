@@ -1,14 +1,20 @@
 /**
  * Build styles
  */
-import { extractContentAfterCaret, fragmentToHtml, make, getHTML, moveCaret } from './utils';
+import {
+  extractContentAfterCaret,
+  fragmentToHtml,
+  make,
+  getHTML,
+  moveCaret,
+} from "./utils";
 
-import './index.css';
+import "./index.css";
 
 /**
  * Require polyfills
  */
-import './polyfills.js';
+import "./polyfills.js";
 
 /**
  * @typedef {object} ChecklistData
@@ -54,7 +60,7 @@ export default class Checklist {
   static get toolbox() {
     return {
       icon: '<svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 15a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zm0-2.394a5.106 5.106 0 1 0 0-10.212 5.106 5.106 0 0 0 0 10.212zm-.675-4.665l2.708-2.708 1.392 1.392-2.708 2.708-1.392 1.391-2.971-2.971L5.245 6.36l1.58 1.58z"/></svg>',
-      title: 'Checklist',
+      title: "Checklist",
     };
   }
 
@@ -72,7 +78,7 @@ export default class Checklist {
        * @returns {string}
        */
       export: (data) => {
-        return data.items.map(({ text }) => text).join('. ');
+        return data.items.map(({ text }) => text).join(". ");
       },
       /**
        * To create a checklist from other block's string, just put it at the first item
@@ -126,7 +132,10 @@ export default class Checklist {
    * @returns {Element}
    */
   render() {
-    this._elements.wrapper = make('div', [this.CSS.baseBlock, this.CSS.wrapper]);
+    this._elements.wrapper = make("div", [
+      this.CSS.baseBlock,
+      this.CSS.wrapper,
+    ]);
 
     /**
      * If there is no data, create first empty item
@@ -134,13 +143,13 @@ export default class Checklist {
     if (!this.data.items) {
       this.data.items = [
         {
-          text: '',
+          text: "",
           checked: false,
         },
       ];
     }
 
-    this.data.items.forEach(item => {
+    this.data.items.forEach((item) => {
       const newItem = this.createChecklistItem(item);
 
       this._elements.wrapper.appendChild(newItem);
@@ -156,20 +165,24 @@ export default class Checklist {
     /**
      * Add event-listeners
      */
-    this._elements.wrapper.addEventListener('keydown', (event) => {
-      const [ENTER, BACKSPACE] = [13, 8]; // key codes
+    this._elements.wrapper.addEventListener(
+      "keydown",
+      (event) => {
+        const [ENTER, BACKSPACE] = [13, 8]; // key codes
 
-      switch (event.keyCode) {
-        case ENTER:
-          this.enterPressed(event);
-          break;
-        case BACKSPACE:
-          this.backspace(event);
-          break;
-      }
-    }, false);
+        switch (event.keyCode) {
+          case ENTER:
+            this.enterPressed(event);
+            break;
+          case BACKSPACE:
+            this.backspace(event);
+            break;
+        }
+      },
+      false
+    );
 
-    this._elements.wrapper.addEventListener('click', (event) => {
+    this._elements.wrapper.addEventListener("click", (event) => {
       this.toggleCheckbox(event);
     });
 
@@ -197,7 +210,7 @@ export default class Checklist {
     /**
      * Skip empty items
      */
-    items = items.filter(item => item.text.trim().length !== 0);
+    items = items.filter((item) => item.text.trim().length !== 0);
 
     return {
       items,
@@ -237,10 +250,10 @@ export default class Checklist {
    * @returns {Element} checkListItem - new element of checklist
    */
   createChecklistItem(item = {}) {
-    const checkListItem = make('div', this.CSS.item);
-    const checkbox = make('span', this.CSS.checkbox);
-    const textField = make('div', this.CSS.textField, {
-      innerHTML: item.text ? item.text : '',
+    const checkListItem = make("div", this.CSS.item);
+    const checkbox = make("span", this.CSS.checkbox);
+    const textField = make("div", this.CSS.textField, {
+      innerHTML: item.text ? item.text : "",
       contentEditable: !this.readOnly,
     });
 
@@ -322,9 +335,9 @@ export default class Checklist {
     const currentIndex = this.items.indexOf(currentItem);
     const prevItem = this.items[currentIndex - 1];
 
-    if (!prevItem) {
-      return;
-    }
+    // if (!prevItem) {
+    //   return;
+    // }
 
     const selection = window.getSelection();
     const caretAtTheBeginning = selection.focusOffset === 0;
@@ -359,11 +372,11 @@ export default class Checklist {
   get CSS() {
     return {
       baseBlock: this.api.styles.block,
-      wrapper: 'cdx-checklist',
-      item: 'cdx-checklist__item',
-      itemChecked: 'cdx-checklist__item--checked',
-      checkbox: 'cdx-checklist__item-checkbox',
-      textField: 'cdx-checklist__item-text',
+      wrapper: "cdx-checklist",
+      item: "cdx-checklist__item",
+      itemChecked: "cdx-checklist__item--checked",
+      checkbox: "cdx-checklist__item-checkbox",
+      textField: "cdx-checklist__item-text",
     };
   }
 
@@ -373,7 +386,9 @@ export default class Checklist {
    * @returns {Element[]}
    */
   get items() {
-    return Array.from(this._elements.wrapper.querySelectorAll(`.${this.CSS.item}`));
+    return Array.from(
+      this._elements.wrapper.querySelectorAll(`.${this.CSS.item}`)
+    );
   }
 
   /**
