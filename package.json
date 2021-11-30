@@ -17,7 +17,8 @@
   "main": "./dist/bundle.js",
   "scripts": {
     "build": "webpack --mode production",
-    "build:dev": "webpack --mode development --watch"
+    "build:dev": "webpack --mode development --watch",
+    "build:webpack:dev": "webpack --mode development --progress --display-error-details --display-entrypoints --watch"
   },
   "author": "CodeX <team@codex.so>",
   "devDependencies": {

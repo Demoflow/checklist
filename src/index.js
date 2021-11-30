@@ -335,16 +335,17 @@ export default class Checklist {
     const currentIndex = this.items.indexOf(currentItem);
     const prevItem = this.items[currentIndex - 1];
 
-    // if (!prevItem) {
-    //   return;
-    // }
+    if (!prevItem && !currentItem.textContent) {
+      currentItem.remove();
+      return;
+    }
 
     const selection = window.getSelection();
     const caretAtTheBeginning = selection.focusOffset === 0;
 
-    // if (!caretAtTheBeginning) {
-    //   return;
-    // }
+    if (!caretAtTheBeginning) {
+      return;
+    }
 
     event.preventDefault();
 
