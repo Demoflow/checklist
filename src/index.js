@@ -383,7 +383,12 @@ export default class Checklist {
     const prevItem = this.items[currentIndex - 1];
 
     if (!prevItem && !currentItem.textContent) {
+      const currentBlockIndex = this.api.blocks.getCurrentBlockIndex();
+
+      this.api.blocks.insert();
       currentItem.remove();
+
+      this.api.caret.setToBlock(currentBlockIndex - 1);
       return;
     }
 
@@ -391,6 +396,10 @@ export default class Checklist {
     const caretAtTheBeginning = selection.focusOffset === 0;
 
     if (!caretAtTheBeginning) {
+      const currentBlockIndex = this.api.blocks.getCurrentBlockIndex();
+      this.api.blocks.insert();
+      this.api.caret.setToBlock(currentBlockIndex + 1);
+
       return;
     }
 
@@ -402,13 +411,17 @@ export default class Checklist {
      */
     const fragmentAfterCaret = extractContentAfterCaret();
     const prevItemInput = this.getItemInput(prevItem);
-    const prevItemChildNodesLength = prevItemInput.childNodes.length;
+    const prevItemChildNodesLength = prevItemInput?.childNodes?.length || 0;
 
-    prevItemInput.appendChild(fragmentAfterCaret);
+    if (prevItemInput) {
+      prevItemInput?.appendChild(fragmentAfterCaret);
 
-    moveCaret(prevItemInput, undefined, prevItemChildNodesLength);
+      moveCaret(prevItemInput, undefined, prevItemChildNodesLength);
+    }
 
     currentItem.remove();
+
+    return;
   }
 
   /**
