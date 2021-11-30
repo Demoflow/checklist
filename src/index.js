@@ -342,9 +342,9 @@ export default class Checklist {
     const selection = window.getSelection();
     const caretAtTheBeginning = selection.focusOffset === 0;
 
-    if (!caretAtTheBeginning) {
-      return;
-    }
+    // if (!caretAtTheBeginning) {
+    //   return;
+    // }
 
     event.preventDefault();
 
